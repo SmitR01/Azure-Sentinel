@@ -1,7 +1,8 @@
 """This __init__ file will be called once triggered is generated."""
 import time
+from .bitsight_statistics import BitSightStatistics
 from ..SharedCode.logger import applogger
-from .bitsight import BitSight
+
 import azure.functions as func
 
 
@@ -13,11 +14,10 @@ def main(mytimer: func.TimerRequest) -> None:
     """
     applogger.info("BitSight: Alerts-Graph-statistics Details: Start processing")
     start = time.time()
-    BitSight_obj = BitSight()
-    BitSight_obj.get_bitsight_data_into_sentinel()
+    bitsightstatistics_obj = BitSightStatistics(start)
+    bitsightstatistics_obj.get_bitsight_data_into_sentinel()
     end = time.time()
     applogger.info("BitSight: time taken for data ingestion is {} sec".format(int(end-start)))
     applogger.info("BitSight: Alerts-Graph-statistics Details: execution completed.")
-
     if mytimer.past_due:
         applogger.info('BitSight Connector: The timer is past due!')
